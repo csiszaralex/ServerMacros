@@ -9,8 +9,9 @@ datasource db {
 
 model dns_domain {
   id    Int      @id @default(autoincrement())
-  name  String   @db.VarChar(255)
+  name  String   @db.VarChar(255) @unique
   type  String   @default("A") @db.VarChar(8)
+  ip    String   @db.VarChar(20) @default("dynamic")
   proxy Boolean? @default(false)
 }
 
