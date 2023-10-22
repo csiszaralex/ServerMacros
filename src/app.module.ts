@@ -1,11 +1,13 @@
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule, QueryInfo, loggingMiddleware } from 'nestjs-prisma';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import appConfig from './config/app.config';
 import { AppConfig } from './config/app.config.interface';
 import { DomainModule } from './domain/domain.module';
+import { SchedulerModule } from './util/scheduler/scheduler.module';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { DomainModule } from './domain/domain.module';
         },
       }),
     }),
+    ScheduleModule.forRoot(),
     DomainModule,
+    SchedulerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

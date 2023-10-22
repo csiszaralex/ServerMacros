@@ -85,7 +85,7 @@ export class DomainService {
     });
     return records;
   }
-  async update_dns_record(record: Record, ip: string) {
+  async update_dns_record(record: Record, ip: string): Promise<void> {
     await firstValueFrom(
       this.httpService.put(
         `https://api.cloudflare.com/client/v4/zones/${record.zone_id}/dns_records/${record.id}`,
@@ -99,7 +99,7 @@ export class DomainService {
       ),
     );
   }
-  async changes_domains_if_needed(force = false) {
+  async change_domains_if_needed(force = false): Promise<void> {
     const last_ip = await this.get_last_ip();
     const ip = await this.get_ip();
     if (last_ip === ip && !force) return;

@@ -20,5 +20,6 @@ import { DomainService } from './domain.service';
   ],
   controllers: [DomainController],
   providers: [DomainService],
+  exports: [DomainService],
 })
 export class DomainModule {}
