@@ -32,6 +32,7 @@
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^7.1.13",
     "@prisma/client": "^5.4.2",
     "nestjs-prisma": "0.22.0",
     "reflect-metadata": "^0.1.13",
@@ -77,5 +78,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
