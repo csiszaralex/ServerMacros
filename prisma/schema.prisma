@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model dns_domain {
+  id    Int      @id @default(autoincrement())
+  name  String   @db.VarChar(255)
+  type  String   @default("A") @db.VarChar(8)
+  proxy Boolean? @default(false)
+}
+
+model ips {
+  id         Int      @id @default(autoincrement())
+  IP         String   @db.VarChar(20)
+  ChangeDate DateTime @default(dbgenerated("(curtime())")) @db.DateTime(0)
+}
