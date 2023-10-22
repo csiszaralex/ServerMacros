@@ -7,7 +7,7 @@ export class DomainController {
 
   @Get()
   getHello() {
-    return this.domainService.changed_ip();
+    return this.domainService.changes_domains_if_needed();
   }
 
   // @Post()

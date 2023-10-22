@@ -3,5 +3,6 @@ export interface Record {
   id: string;
   type: string;
   zone_id: string;
+  ip: string;
   proxied: boolean;
 }

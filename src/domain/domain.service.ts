@@ -47,6 +47,7 @@ export class DomainService {
         name: record.name,
         id: record.id,
         type: record.type,
+        ip: record.content,
         zone_id,
         proxied: false,
       };
@@ -62,6 +63,9 @@ export class DomainService {
     records = records.filter(record => {
       for (const i in wanted) {
         if (wanted[i].name == record.name && wanted[i].type == record.type) {
+          if (wanted[i].ip != 'dynamic') {
+            return record.ip != wanted[i].ip || record.proxied != wanted[i].proxy;
+          }
           return true;
         }
       }
@@ -74,25 +78,28 @@ export class DomainService {
         proxied: wanted.find(
           wanted_record => wanted_record.name == record.name && wanted_record.type == record.type,
         ).proxy,
+        ip: wanted.find(
+          wanted_record => wanted_record.name == record.name && wanted_record.type == record.type,
+        ).ip,
       };
     });
     return records;
   }
   async update_dns_record(record: Record, ip: string) {
     await firstValueFrom(
-      this.httpService.patch(
+      this.httpService.put(
         `https://api.cloudflare.com/client/v4/zones/${record.zone_id}/dns_records/${record.id}`,
         {
+          content: record.ip == 'dynamic' ? ip : record.ip,
           type: record.type,
           name: record.name,
-          content: ip,
           ttl: 1,
           proxied: record.proxied,
         },
       ),
     );
   }
-  async changed_ip(force = false) {
+  async changes_domains_if_needed(force = false) {
     const last_ip = await this.get_last_ip();
     const ip = await this.get_ip();
     if (last_ip === ip && !force) return;
