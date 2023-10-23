@@ -7,11 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum BACKUP_TYPE {
+  FULL
+  PERSONAL
+}
+
 model dns_domain {
   id    Int      @id @default(autoincrement())
-  name  String   @db.VarChar(255) @unique
+  name  String   @unique @db.VarChar(255)
   type  String   @default("A") @db.VarChar(8)
-  ip    String   @db.VarChar(20) @default("dynamic")
+  ip    String   @default("dynamic") @db.VarChar(20)
   proxy Boolean? @default(false)
 }
 
@@ -19,4 +24,12 @@ model ips {
   id         Int      @id @default(autoincrement())
   IP         String   @db.VarChar(20)
   ChangeDate DateTime @default(dbgenerated("(curtime())")) @db.DateTime(0)
+}
+
+model backup {
+  id   Int         @id @default(autoincrement())
+  type BACKUP_TYPE
+  date DateTime    @default(dbgenerated("(curtime())")) @db.DateTime(0)
+  file String      @db.VarChar(255)
+  size Int         @default(0)
 }
