@@ -1,37 +1,29 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { dns_domain } from '@prisma/client';
 import { DomainService } from './domain.service';
+import { CreateDomainDto } from './dto/create_domain.dto';
 
 @Controller('domain')
 export class DomainController {
   constructor(private readonly domainService: DomainService) {}
 
   @Get()
-  getHello() {
-    return this.domainService.change_domains_if_needed();
+  getAll(): Promise<{ ip: string; name: string; proxy: boolean; type: string }[]> {
+    return this.domainService.getAll();
   }
 
-  // @Post()
-  // create(@Body() createDomainDto: CreateDomainDto) {
-  //   return this.domainService.create(createDomainDto);
-  // }
+  @Put('/update')
+  manualUpdate(): Promise<{ last_ip: string; ip: string }> {
+    return this.domainService.change_domains_if_needed(true);
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.domainService.findAll();
-  // }
+  @Post()
+  create(@Body() createDomainDto: CreateDomainDto): Promise<dns_domain> {
+    return this.domainService.create(createDomainDto);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.domainService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateDomainDto: UpdateDomainDto) {
-  //   return this.domainService.update(+id, updateDomainDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.domainService.remove(+id);
-  // }
+  @Delete(':id/')
+  delete(@Param('id', ParseIntPipe) id: number): void {
+    this.domainService.delete(id);
+  }
 }
