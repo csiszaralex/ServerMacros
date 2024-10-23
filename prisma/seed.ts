@@ -3,15 +3,15 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function seedDnsRecors() {
-  await prisma.dns_records.createMany({
-    data: [
-      { name: 'csalex.dev' },
-      { name: 'csalex.in' },
-      { name: 'black.csalex.dev' },
-      { name: 'dev.csalex.dev' },
-      { name: 'alex.csalex.dev', ip: '152.66.181.110' },
-    ],
-  });
+  //   await prisma.dns_records.createMany({
+  //     data: [
+  //       { name: 'csalex.dev' },
+  //       { name: 'csalex.in' },
+  //       { name: 'black.csalex.dev' },
+  //       { name: 'dev.csalex.dev' },
+  //       { name: 'alex.csalex.dev', ip: '152.66.181.110' },
+  //     ],
+  //   });
 }
 async function seedIp() {
   await prisma.ips.create({
