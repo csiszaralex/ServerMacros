@@ -1,4 +1,7 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString, IsUrl, Matches, Max, Min } from 'class-validator';
+import { DNS_TYPE } from '@prisma/client';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsEnum, IsNotEmpty, IsString, IsUrl, Validate } from 'class-validator';
+import { IpValidator } from './validators/ip.validator';
 
 export class CreateDomainDto {
   @IsString()
@@ -7,37 +10,36 @@ export class CreateDomainDto {
   name: string;
 
   @IsString()
-  @IsEnum([
-    'A',
-    'AAAA',
-    'CNAME',
-    'TXT',
-    'SRV',
-    'LOC',
-    'MX',
-    'NS',
-    'SPF',
-    'CERT',
-    'DNSKEY',
-    'DS',
-    'NAPTR',
-    'SMIMEA',
-    'SSHFP',
-    'SVCB',
-    'TLSA',
-    'URI',
-  ])
-  type = 'A';
+  @IsEnum(DNS_TYPE)
+  @Transform(({ value }) => value.toUpperCase())
+  //TODO enable all DNS type and remove the list from here
+  // @IsEnum([
+  //   'A',
+  //   'AAAA',
+  //   'CNAME',
+  //   'TXT',
+  //   'SRV',
+  //   'LOC',
+  //   'MX',
+  //   'NS',
+  //   'SPF',
+  //   'CERT',
+  //   'DNSKEY',
+  //   'DS',
+  //   'NAPTR',
+  //   'SMIMEA',
+  //   'SSHFP',
+  //   'SVCB',
+  //   'TLSA',
+  //   'URI',
+  // ])
+  type: DNS_TYPE = 'A';
 
   @IsString()
-  @Matches(
-    /^((?:((([0-1]){0,1}[0-9][0-9]{0,1})|(2[0-4][0-9])|(25[0-5]))\.){3}((([0-1]){0,1}[0-9][0-9]{0,1})|(2[0-4][0-9])|(25[0-5]))|dynamic)$/,
-  )
+  @Validate(IpValidator, ['type'])
   ip = 'dynamic';
 
-  @IsNumber()
-  // @IsString()
-  @Min(0)
-  @Max(1)
-  proxied = 0;
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  proxied = false;
 }

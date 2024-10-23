@@ -1,29 +1,24 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { dns_domain } from '@prisma/client';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { DomainService } from './domain.service';
 import { CreateDomainDto } from './dto/create_domain.dto';
+import { DnsRecordWithoutIds } from './types/dnsRecordWithoutIds.type';
 
 @Controller('domain')
 export class DomainController {
   constructor(private readonly domainService: DomainService) {}
 
   @Get()
-  getAll(): Promise<{ ip: string; name: string; proxy: boolean; type: string }[]> {
+  getAll(): Promise<DnsRecordWithoutIds[]> {
     return this.domainService.getAll();
   }
 
-  @Put('/update')
-  manualUpdate(): Promise<{ last_ip: string; ip: string }> {
-    return this.domainService.change_domains_if_needed(true);
-  }
-
   @Post()
-  create(@Body() createDomainDto: CreateDomainDto): Promise<dns_domain> {
+  create(@Body() createDomainDto: CreateDomainDto): Promise<DnsRecordWithoutIds> {
     return this.domainService.create(createDomainDto);
   }
 
   @Delete(':id/')
-  delete(@Param('id', ParseIntPipe) id: number): void {
-    this.domainService.delete(id);
+  delete(@Param('id', ParseIntPipe) id: number): Promise<never> {
+    return this.domainService.delete(id);
   }
 }
