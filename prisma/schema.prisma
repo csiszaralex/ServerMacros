@@ -7,29 +7,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum BACKUP_TYPE {
-  FULL
-  PERSONAL
+enum DNS_TYPE {
+  A //IPv4
+  AAAA //IPv6
+  CNAME //Pointer to another domain
+  MX //Mail Exchange
 }
 
-model dns_domain {
+model dns_records {
   id    Int      @id @default(autoincrement())
-  name  String   @unique @db.VarChar(255)
-  type  String   @default("A") @db.VarChar(8)
-  ip    String   @default("dynamic") @db.VarChar(20)
-  proxy Boolean? @default(false)
+  name  String   @unique @db.VarChar(64)
+  type  DNS_TYPE @default(A)
+  ip    String   @default("dynamic") @db.VarChar(32)
+  proxy Boolean  @default(false)
 }
 
 model ips {
-  id         Int      @id @default(autoincrement())
-  IP         String   @db.VarChar(20)
-  ChangeDate DateTime @default(dbgenerated("(curtime())")) @db.DateTime(0)
+  id          Int      @id @default(autoincrement())
+  ip          String   @db.VarChar(20)
+  change_date DateTime @default(dbgenerated("(curtime())")) @db.DateTime(0)
 }
 
-model backup {
-  id   Int         @id @default(autoincrement())
-  type BACKUP_TYPE
-  date DateTime    @default(dbgenerated("(curtime())")) @db.DateTime(0)
-  file String      @db.VarChar(255)
-  size Int         @default(0)
+model backups {
+  id        Int          @id @default(autoincrement())
+  date      DateTime     @default(dbgenerated("(curtime())")) @db.DateTime(0)
+  file      String       @db.VarChar(255)
+  size      Int          @default(0)
+  available Boolean      @default(true)
+  type_id   Int
+  type      backup_types @relation(fields: [type_id], references: [id])
+}
+
+model backup_types {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique @db.VarChar(255)
+  cron       String    @db.VarChar(255)
+  keep_count Int       @default(2)
+  dir        String    @db.VarChar(255)
+  exclude    String    @default("") @db.VarChar(255)
+  enabled    Boolean   @default(false)
+  backups    backups[]
 }
