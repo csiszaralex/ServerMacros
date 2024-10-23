@@ -1,0 +1,27 @@
+meta {
+  name: New DNS
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/domain
+  body: formUrlEncoded
+  auth: none
+}
+
+body:json {
+  {
+    "name": "asd.csalex.dev",
+    "type":"A",
+    "ip":"192.168.1.1",
+    "proxied": true
+  }
+}
+
+body:form-urlencoded {
+  name: test.csalex.dev
+  ip: 12.12.13.5
+  ~type: a
+  ~proxied: false
+}
