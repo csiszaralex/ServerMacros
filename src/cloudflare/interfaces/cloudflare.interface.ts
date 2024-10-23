@@ -1,3 +1,5 @@
+import { DNS_TYPE } from '@prisma/client';
+
 export interface cloudflareZone {
   id: string;
   name: string;
@@ -47,7 +49,7 @@ export interface cloudflareDNSRecord {
   zone_id: string;
   zone_name: string;
   name: string;
-  type: string;
+  type: DNS_TYPE;
   content: string;
   proxiable: boolean;
   proxied: boolean;
