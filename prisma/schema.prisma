@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum BACKUP_TYPE {
-  FULL
-  PERSONAL
-}
-
 model dns_domain {
   id    Int      @id @default(autoincrement())
   name  String   @unique @db.VarChar(255)
@@ -27,9 +22,22 @@ model ips {
 }
 
 model backup {
-  id   Int         @id @default(autoincrement())
-  type BACKUP_TYPE
-  date DateTime    @default(dbgenerated("(curtime())")) @db.DateTime(0)
-  file String      @db.VarChar(255)
-  size Int         @default(0)
+  id        Int         @id @default(autoincrement())
+  date      DateTime    @default(dbgenerated("(curtime())")) @db.DateTime(0)
+  file      String      @db.VarChar(255)
+  size      Int         @default(0)
+  available Boolean     @default(true)
+  typeId   Int
+  type      backup_type @relation(fields: [typeId], references: [id])
+}
+
+model backup_type {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique @db.VarChar(255)
+  cron       String   @db.VarChar(255)
+  keep_count Int      @default(2)
+  dir        String   @db.VarChar(255)
+  exclude    String   @default("") @db.VarChar(255)
+  active     Boolean  @default(true)
+  backups    backup[]
 }
