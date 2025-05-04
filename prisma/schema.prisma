@@ -15,12 +15,12 @@ enum DNS_TYPE {
 }
 
 model dns_records {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(64)
-  type      DNS_TYPE @default(A)
-  ip        String   @default("dynamic") @db.VarChar(32)
-  proxy     Boolean  @default(false)
-  record_id String   @unique @db.VarChar(32)
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(64)
+  type      DNS_TYPE  @default(A)
+  ip        String    @default("dynamic") @db.VarChar(32)
+  proxy     Boolean   @default(false)
+  record_id String    @unique @db.VarChar(32)
   zone_id   Int
   zone      dns_zones @relation(fields: [zone_id], references: [id])
 
@@ -28,11 +28,19 @@ model dns_records {
 }
 
 model dns_zones {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique @db.VarChar(32)
-  zone_id     String        @unique @db.VarChar(32)
-  records     dns_records[]
+  id      Int           @id @default(autoincrement())
+  name    String        @unique @db.VarChar(32)
+  zone_id String        @unique @db.VarChar(32)
+  records dns_records[]
 }
+
+// model dns_domain {
+//   id    Int      @id @default(autoincrement())
+//   name  String   @unique @db.VarChar(255)
+//   type  String   @default("A") @db.VarChar(8)
+//   ip    String   @default("dynamic") @db.VarChar(20)
+//   proxy Boolean? @default(false)
+// }
 
 model ips {
   id          Int      @id @default(autoincrement())

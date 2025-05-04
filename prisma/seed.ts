@@ -2,50 +2,78 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function seedDnsRecors() {
-  //   await prisma.dns_records.createMany({
-  //     data: [
-  //       { name: 'csalex.dev' },
-  //       { name: 'csalex.in' },
-  //       { name: 'black.csalex.dev' },
-  //       { name: 'dev.csalex.dev' },
-  //       { name: 'alex.csalex.dev', ip: '152.66.181.110' },
-  //     ],
-  //   });
+async function make_records() {
+  await prisma.dns_domain.createMany({
+    data: [
+      { name: 'csalex.dev' },
+      { name: 'csalex.in' },
+      { name: 'black.csalex.dev' },
+      { name: 'dev.csalex.dev' },
+      { name: 'alex.csalex.dev', ip: '152.66.183.110' },
+    ],
+  });
 }
-async function seedIp() {
+async function make_ip() {
   await prisma.ips.create({
-    data: { ip: '0.0.0.0' },
+    data: {
+      IP: '0.0.0.0',
+    },
   });
 }
 
-async function seedBackupTypes() {
-  await prisma.backup_types.createMany({
+async function make_backups_types() {
+  await prisma.backup_type.createMany({
     data: [
       {
-        name: 'full',
-        cron: '0 2 * * 6',
+        name: 'Full',
         keep_count: 2,
         dir: '/',
-        exclude: '/dev;/proc;/sys;/tmp;/run;/mnt;/media;/lost+found;/backup',
-        enabled: false,
+        cron: '0 2 * * 6',
+        active: false,
+        exclude: [
+          '/dev',
+          '/proc',
+          '/sys',
+          '/tmp',
+          '/run',
+          '/mnt',
+          '/media',
+          '/lost+found',
+          '/backup',
+        ].join(';'),
       },
       {
-        name: 'personal',
-        cron: '0 2 * * */2',
+        name: 'Personal',
         keep_count: 3,
         dir: '/home/pi',
+        cron: '0 2 * * */2',
+        active: false,
         exclude: '',
-        enabled: false,
+      },
+      {
+        name: 'Full_test',
+        active: true,
+        cron: '30 */2 * * * *',
+        keep_count: 2,
+        dir: '/home/pi/Documents/python',
+        exclude: '',
+      },
+      {
+        name: 'PerTest',
+        active: true,
+        cron: '* * * * *',
+        keep_count: 5,
+        dir: '/home/pi/Documents/test',
+        exclude: '',
       },
     ],
   });
 }
 
 async function main() {
-  seedDnsRecors();
-  seedIp();
-  seedBackupTypes();
+  make_records();
+  make_ip();
+  make_backups_types();
 }
 
 main()

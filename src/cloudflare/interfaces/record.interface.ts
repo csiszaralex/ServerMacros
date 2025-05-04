@@ -1,9 +1,7 @@
-import { DNS_TYPE } from '@prisma/client';
-
 export interface Record {
   name: string;
   id: string;
-  type: DNS_TYPE;
+  type: string;
   zone_id: string;
   ip: string;
   proxied: boolean;

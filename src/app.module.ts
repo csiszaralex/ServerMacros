@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule, QueryInfo, loggingMiddleware } from 'nestjs-prisma';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BackupModule } from './backup/backup.module';
 import { CloudflareModul } from './cloudflare/cloudflare.module';
 import appConfig from './config/app.config';
 import { AppConfig } from './config/app.config.interface';
@@ -39,6 +40,8 @@ import { DomainModule } from './domain/domain.module';
     ScheduleModule.forRoot(),
     DomainModule,
     CloudflareModul,
+    SchedulerModule,
+    BackupModule,
   ],
   controllers: [AppController],
   providers: [AppService],
